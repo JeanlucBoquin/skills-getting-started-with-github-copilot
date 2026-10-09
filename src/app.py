@@ -19,25 +19,70 @@ current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
 
-# In-memory activity database
+# Base de datos de actividades en memoria
 activities = {
-    "Chess Club": {
-        "description": "Learn strategies and compete in chess tournaments",
-        "schedule": "Fridays, 3:30 PM - 5:00 PM",
+    "Club de Ajedrez": {
+        "categoria": "intelectual",
+        "description": "Aprende estrategias y compite en torneos de ajedrez",
+        "schedule": "Viernes, 3:30 PM - 5:00 PM",
         "max_participants": 12,
         "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
     },
-    "Programming Class": {
-        "description": "Learn programming fundamentals and build software projects",
-        "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
+    "Clase de Programación": {
+        "categoria": "intelectual",
+        "description": "Aprende fundamentos de programación y construye proyectos de software",
+        "schedule": "Martes y jueves, 3:30 PM - 4:30 PM",
         "max_participants": 20,
         "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
     },
-    "Gym Class": {
-        "description": "Physical education and sports activities",
-        "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
+    "Clase de Gimnasia": {
+        "categoria": "deportivo",
+        "description": "Educación física y actividades deportivas",
+        "schedule": "Lunes, miércoles y viernes, 2:00 PM - 3:00 PM",
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+    },
+    "Equipo de Fútbol": {
+        "categoria": "deportivo",
+        "description": "Entrenamiento y partidos de fútbol para desarrollar coordinación y trabajo en equipo",
+        "schedule": "Lunes y miércoles, 4:00 PM - 5:30 PM",
+        "max_participants": 18,
+        "participants": []
+    },
+    "Club de Baloncesto": {
+        "categoria": "deportivo",
+        "description": "Practica pases, dribbling y estrategias de juego colectivo",
+        "schedule": "Miércoles y viernes, 3:30 PM - 5:00 PM",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Taller de Arte": {
+        "categoria": "artistico",
+        "description": "Explora técnicas de dibujo y pintura en un ambiente creativo",
+        "schedule": "Martes, 3:30 PM - 5:00 PM",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Coro Escolar": {
+        "categoria": "artistico",
+        "description": "Mejora tu voz y disfruta de la práctica musical en grupo",
+        "schedule": "Jueves, 3:30 PM - 5:00 PM",
+        "max_participants": 20,
+        "participants": []
+    },
+    "Club de Debate": {
+        "categoria": "intelectual",
+        "description": "Desarrolla habilidades de argumentación, investigación y expresión oral",
+        "schedule": "Lunes, 3:30 PM - 4:45 PM",
+        "max_participants": 16,
+        "participants": []
+    },
+    "Club de Ciencias": {
+        "categoria": "intelectual",
+        "description": "Realiza experimentos y explora conceptos científicos de forma práctica",
+        "schedule": "Miércoles, 3:30 PM - 5:00 PM",
+        "max_participants": 14,
+        "participants": []
     }
 }
 
@@ -61,6 +106,10 @@ def signup_for_activity(activity_name: str, email: str):
 
     # Get the specific activity
     activity = activities[activity_name]
+
+    # Validate student is not already signed up
+    if email in activity["participants"]:
+        raise HTTPException(status_code=409, detail="Student is already signed up")
 
     # Add student
     activity["participants"].append(email)
